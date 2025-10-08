@@ -1,46 +1,49 @@
-const usernameEl = document.getElementById("username");
-const passwordEl = document.getElementById("password");
-const checkboxEl = document.getElementById("checkbox");
-const existingBtn = document.getElementById("existing");
-const form = document.getElementById("login-form");
+(function () {
+  const form = document.getElementById("login-form");
+  const usernameInput = document.getElementById("username");
+  const passwordInput = document.getElementById("password");
+  const rememberCheckbox = document.getElementById("checkbox");
+  const existingBtn = document.getElementById("existing");
 
-
-window.onload = () => {
-  const savedUser = localStorage.getItem("username");
-  const savedPass = localStorage.getItem("password");
-  if (savedUser && savedPass) {
-    existingBtn.style.display = "inline-block";
-  }
-};
-
-// Handle form submission
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const username = usernameEl.value.trim();
-  const password = passwordEl.value.trim();
-
-  if (!username || !password) return alert("Please fill all fields.");
-
-  alert(`Logged in as ${username}`);
-
-  if (checkboxEl.checked) {
-    localStorage.setItem("username", username);
-    localStorage.setItem("password", password);
-    existingBtn.style.display = "inline-block";
-  } else {
-    localStorage.removeItem("username");
-    localStorage.removeItem("password");
-    existingBtn.style.display = "none";
+  function credsExist() {
+    return localStorage.getItem("username") && localStorage.getItem("password");
   }
 
-  usernameEl.value = "";
-  passwordEl.value = "";
-  checkboxEl.checked = false;
-});
-
-existingBtn.addEventListener("click", () => {
-  const savedUser = localStorage.getItem("username");
-  if (savedUser) {
-    alert(`Logged in as ${savedUser}`);
+  function updateExistingVisibility() {
+    existingBtn.style.display = credsExist() ? "block" : "none";
   }
-});
+
+  window.addEventListener("DOMContentLoaded", () => {
+    // Ensure initial expectations: empty fields & unchecked checkbox
+    usernameInput.value = "";
+    passwordInput.value = "";
+    rememberCheckbox.checked = false;
+    updateExistingVisibility();
+  });
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value;
+
+    alert(Logged in as ${username});
+
+    if (rememberCheckbox.checked) {
+      localStorage.setItem("username", username);
+      localStorage.setItem("password", password);
+    } else {
+      localStorage.removeItem("username");
+      localStorage.removeItem("password");
+    }
+
+    updateExistingVisibility();
+  });
+
+  existingBtn.addEventListener("click", () => {
+    const savedUsername = localStorage.getItem("username");
+    if (savedUsername) {
+      alert(Logged in as ${savedUsername});
+    }
+  });
+})();
